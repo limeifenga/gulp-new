@@ -1,0 +1,18 @@
+body {
+  background-color: yellow;
+}
+body p {
+  background-color: blue ;
+}
+body span {
+  background-color: darkgoldenrod ;
+}
+div {
+  width: 100px;
+}
+div span {
+  color: red;
+}
+div p {
+  text-align: center;
+}
