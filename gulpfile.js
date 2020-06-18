@@ -18,7 +18,10 @@ const pump = require('pump');
 const babel = require('gulp-babel')
 
 // 图片压缩
-const imageMin = require('gulp-imagemin')
+const tinypngNokey = require('gulp-tinypng-nokey')
+
+// 压缩图片2 需要有KEY并且每个月只有500张
+// const tinypng = require('gulp-tinypng-compress'),       
 
 // 路径定义
 const cssSrc = './app/css/*.css',
@@ -43,17 +46,12 @@ gulp.task('es6',  function () {
     .pipe(gulp.dest('./app/compile/js'));
 });
 
-// 图片压缩
-gulp.task('imageMin',function(cb){
-  gulp.src('./app/images/*.*')
-      .pipe(imageMin({
-        optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
-        progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
-        interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
-        multipass: true //类型：Boolean 默认：false 多次优化svg直到完全优化
-      }))
+
+//压缩图片
+gulp.task('tinypngNokey', function() {
+  return gulp.src('./app/images/*.{png,jpg,jpeg,gif,ico}')
+      .pipe(tinypngNokey())
       .pipe(gulp.dest('./dist/images'));
-      cb()
 })
 
 // css文件压缩
@@ -127,8 +125,8 @@ gulp.task('revHtml', function () {
  * uglifyJs  压缩JS         output > dist
  * revHtml   Html替换css、js文件版本    output > dist
  */
-gulp.task('prod', gulp.series('less', 'assetRev',  'es6', 'minifyCss', 'uglifyJs', gulp.parallel('revCss', 'revJs'), 
-'revHtml')); 
+gulp.task('prod', gulp.series('less', 'assetRev', 'es6',  'minifyCss', 'uglifyJs', gulp.parallel('revCss', 'revJs'), 
+'revHtml','tinypngNokey')); 
 
 
 // 设置自动监听
