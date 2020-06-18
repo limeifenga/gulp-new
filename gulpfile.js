@@ -14,8 +14,11 @@ const minifyCss = require('gulp-minify-css')
 const uglify = require('gulp-uglify');      
 
 const pump = require('pump');
-
+// es6 编译成 es5
 const babel = require('gulp-babel')
+
+// 图片压缩
+const imageMin = require('gulp-imagemin')
 
 // 路径定义
 const cssSrc = './app/css/*.css',
@@ -40,6 +43,18 @@ gulp.task('es6',  function () {
     .pipe(gulp.dest('./app/compile/js'));
 });
 
+// 图片压缩
+gulp.task('imageMin',function(cb){
+  gulp.src('./app/images/*.*')
+      .pipe(imageMin({
+        optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
+        progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
+        interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
+        multipass: true //类型：Boolean 默认：false 多次优化svg直到完全优化
+      }))
+      .pipe(gulp.dest('./dist/images'));
+      cb()
+})
 
 // css文件压缩
 gulp.task('minifyCss', function (cb) {
@@ -65,7 +80,6 @@ gulp.task('uglifyJs', function(cb){
         gulp.dest('./dist/js')
       ],cb)
 });
-
 
 /*—加版本号——————————————————————————————————————————————————————————————————*/
 // 为css中引入的图片/字体等添加hash编码
